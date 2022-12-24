@@ -1,0 +1,69 @@
+assign(max_models, -1).
+assign(domain_size, 2).
+
+formulas(assumptions).
+	% C1 - prisoner 1 confesses
+	% C2 - prizonierul 2 confesses
+	% LS1 MS1 SS1 NS1 - prisoner 1 gets a large/medium/small/no sentence (large sentence 1, medium sentence 1, small sentence 1, no sentence 1)
+	% LS2 MS2 SS2 NS2 - prisoner 2 gets a large/medium/small/no sentence
+	% LAS1 MAS1 SAS1 NAS1 - prisoner 1 gets a large/medium/small/no sentence if he switches to an alternative strategy (large alternative sentence 1, medium alternative sentence 1, ...)
+	% LAS2 MAS2 SAS2 NAS2 - prisoner 2 gets a large/medium/small/no sentence if he switches to an alternative strategy
+	% alternative_strategy_C1 - prisoner 1 can switch his decision to confessing, from the current state
+	% alternative_strategy_not_C1 - prisoner 1 can switch his decision to not confessing, from the current state
+	% alternative_strategy_C2 - prisoner 2 can switch his decision to confessing, from the current state
+	% alternative_strategy_not_C2 - prisoner 2 can switch his decision to not confessing, from the current state
+	% P1_change_benefit - prisoner 1 benefits if he switches strategies from current state and the other prisoner keeps the same strategy (prisoner 1 gets a smaller sentence if he switches)
+	% P2_change_benefit - prisoner 2 benefits if he switches strategies from current state and the other prisoner keeps the same strategy (prisoner 2 gets a smaller sentence if he switches)
+	% nash_equilibrium - the current state is a Nash equilibrium (no prisoner gets a smaller sentence if he switches strategies and the other prisoner keeps the same strategy)
+	
+	% each pair of desicions to cooperate/ not cooperate comes with specific sentences for each prisoner
+	(-C1 & -C2) <-> (-LS1 & -LS2 & -MS1 & -MS2 & SS1 & SS2 & -NS1 & -NS2).
+	(-C1 & C2) <-> (LS1 & -LS2 & -MS1 & -MS2 & -SS1 & -SS2 & -NS1 & NS2).
+	 (C1 & -C2) <-> (-LS1 & LS2 & -MS1 & -MS2 & -SS1 & -SS2 & NS1 & -NS2).
+	 (C1 & C2) <-> (-LS1 & -LS2 & MS1 & MS2 & -SS1 & -SS2 & -NS1 & -NS2).  
+
+	% each strategy has an alternative
+	C1 <-> alternative_strategy_not_C1.
+	C1 <-> -alternative_strategy_C1.
+
+	-C1 <-> alternative_strategy_C1.
+	-C1 <-> -alternative_strategy_not_C1.
+
+	C2 <-> alternative_strategy_not_C2.
+	C2 <-> -alternative_strategy_C2.
+
+	-C2 <-> alternative_strategy_C2.
+	-C2 <-> -alternative_strategy_not_C2.
+
+	% each alternative strategy, if applied, for each prisoner, has an alternative sentence associated with it (considering that the other prisoner has the same strategy)
+	alternative_strategy_C1 & C2 <-> -LAS1 & MAS1 & -SAS1 & -NAS1.
+	alternative_strategy_not_C1 & C2 <-> LAS1 & -MAS1 & -SAS1 & -NAS1.
+
+	alternative_strategy_C1 & -C2 <-> -LAS1 & -MAS1 & -SAS1 & NAS1.
+	alternative_strategy_not_C1 & -C2 <-> -LAS1 & -MAS1 & SAS1 & -NAS1.
+
+	C1 & alternative_strategy_C2 <-> -LAS2 & MAS2 & -SAS2 & -NAS2.
+	C1 & alternative_strategy_not_C2 <-> LAS2 & -MAS2 & -SAS2 & -NAS2.
+
+	-C1 & alternative_strategy_C2 <-> -LAS2 & -MAS2 & -SAS2 & NAS2.
+	-C1 & alternative_strategy_not_C2 <-> -LAS2 & -MAS2 & SAS2 & -NAS2.
+
+
+	%for which prisoners is it advantageous to change strategies?
+	(NAS1 & LS1 | NAS1 & MS1 | NAS1 & SS1 | SAS1 & LS1 | SAS1 & MS1 | MAS1 & LS1) <-> P1_change_benefit.
+
+	(LAS1 & NS1 | MAS1 & NS1 | SAS1 & NS1 | LAS1 & SS1 | MAS1 & SS1 | LAS1 & MS1) <-> -P1_change_benefit.
+
+	(NAS2 & LS2 | NAS2 & MS2 | NAS2 & SS2 | SAS2 & LS2 | SAS2 & MS2 | MAS2 & LS2) <-> P2_change_benefit.
+
+	(LAS2 & NS2 | MAS2 & NS2 | SAS2 & NS2 | LAS2 & SS2 | MAS2 & SS2 | LAS2 & MS2) <-> -P2_change_benefit.
+	 
+
+	%has a nash equilibrium been reached?
+
+	(-P1_change_benefit & -P2_change_benefit) <-> nash_equilibrium.
+end_of_list.
+
+formulas(goals).
+	-nash_equilibrium. % find all states that represent a nash equilibrium
+end_of_list.

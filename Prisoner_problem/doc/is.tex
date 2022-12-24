@@ -1,0 +1,222 @@
+\documentclass[a4paper,12pt]{report}
+\usepackage{algorithmic}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[margin=2cm]{geometry}
+\usepackage[utf8]{inputenc}
+\usepackage{listings} 
+\usepackage{graphicx} 
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{verbatim}
+%\usepackage{mdframed}
+
+\newcommand{\currentdata}{14 February 2015}
+\newtheorem{example}{Example}
+
+\begin{document}
+\vspace{-5cm}
+\begin{center}
+Department of Computer Science\\
+Technical University of Cluj-Napoca\\
+\includegraphics[width=10cm]{fig/footer}
+\end{center}
+\vspace{1cm}
+%\maketitle
+\begin{center}
+\begin{Large}
+ \textbf{Artificial Intelligence}\\
+\end{Large}
+\textit{Laboratory activity}\\
+\vspace{3cm}
+Meze Razvan-Gabriel \& Nedelcu Ioan-Andrei\\
+Group: 2\\
+Email: tatarazvi@gmail.com anedelcu0226@gmail.com\\
+\vspace{12cm}
+Teaching Assistant: Adrian Groza\\
+Adrian.Groza@cs.utcluj.ro\\
+\vspace{1cm}
+\includegraphics[width=10cm]{fig/footer}
+\end{center}
+
+\tableofcontents
+
+% \input{policy}
+
+%\chapter{Laboratory works}
+
+\chapter{Logics}
+\section{Description of the Input File}
+
+The prisoner's dilemma game is described using logical formulas. The game consists of two prisoners, and each prisoner has the choice to confess (C1 and C2) or not confess (-C1 and -C2). Each choice leads to a specific outcome for each prisoner, represented by the variables LS1, MS1, SS1, NS1 for prisoner 1 and LS2, MS2, SS2, NS2 for prisoner 2, which stand for large sentence, medium sentence, small sentence, and no sentence, respectively.
+
+The file also includes formulas that describe the alternative strategies that each prisoner can choose, represented by the variables alternative\_strategy\_C1, alternative\_strategy\_not\_C1, alternative\_strategy\_C2, and alternative\_strategy\_not\_C2, which stand for prisoner 1 switching to confessing or not confessing, and prisoner 2 switching to confessing or not confessing, respectively.
+
+For each alternative strategy, there is an associated alternative sentence for each prisoner, represented by the variables LAS1, MAS1, SAS1, NAS1 for prisoner 1 and LAS2, MAS2, SAS2, NAS2 for prisoner 2.
+
+The file also includes formulas that describe the benefits that each prisoner can gain by switching strategies, represented by the variables P1\_change\_benefit and P2\_change\_benefit, which stand for prisoner 1 and prisoner 2 benefiting, respectively, if they switch strategies from the current state and the other prisoner keeps the same strategy.
+
+Finally, the file includes a formula for the concept of Nash equilibrium, represented by the variable nash\_equilibrium, which indicates that the current state is a Nash equilibrium if no prisoner gets a smaller sentence if he switches strategies and the other prisoner keeps the same strategy.
+
+The goal of the MACE4 input file is to find all the models in which a Nash equilibrium has been reached, in this case, a unique model in which both prisoners confess.
+
+The input file for MACE4 describes the prisoner's dilemma game, in which two prisoners must decide whether to confess or not confess. The game is described using logical formulas.
+
+\subsection{Variables}
+
+The following variables are used in the input file:
+
+\begin{itemize}
+\item $C1$: prisoner 1 confesses
+\item $C2$: prisoner 2 confesses
+\item $LS1$: prisoner 1 gets a large sentence
+\item $MS1$: prisoner 1 gets a medium sentence
+\item $SS1$: prisoner 1 gets a small sentence
+\item $NS1$: prisoner 1 gets no sentence
+\item $LS2$: prisoner 2 gets a large sentence
+\item $MS2$: prisoner 2 gets a medium sentence
+\item $SS2$: prisoner 2 gets a small sentence
+\item $NS2$: prisoner 2 gets no sentence
+\end{itemize}
+
+\subsection{Logical Formulas}
+
+The input file includes the following logical formulas:
+
+\begin{itemize}
+\item If both prisoners do not confess, then both prisoners get small sentences: \
+$(-C1 \land -C2) \leftrightarrow (-LS1 \land -LS2 \land -MS1 \land -MS2 \land SS1 \land SS2 \land -NS1 \land -NS2)$
+\item If prisoner 1 does not confess and prisoner 2 confesses, then prisoner 1 gets a large sentence and prisoner 2 gets no sentence: \
+$(-C1 \land C2) \leftrightarrow (LS1 \land -LS2 \land -MS1 \land -MS2 \land -SS1 \land -SS2 \land -NS1 \land NS2)$
+\item If prisoner 1 confesses and prisoner 2 does not confess, then prisoner 1 gets no sentence and prisoner 2 gets a large sentence: \
+$(C1 \land -C2) \leftrightarrow (-LS1 \land LS2 \land -MS1 \land -MS2 \land -SS1 \land -SS2 \land NS1 \land -NS2)$
+\item If both prisoners confess, then both prisoners get medium sentences: \
+$(C1 \land C2) \leftrightarrow (-LS1 \land -LS2 \land MS1 \land MS2 \land -SS1 \land -SS2 \land -NS1 \land -NS2)$
+\item $alternative\_strategy\_C1$: prisoner 1 can switch his decision to confessing, from the current state
+\item $alternative\_strategy\_not\_C1$: prisoner 1 can switch his decision to not confessing, from the current state
+\item $alternative\_strategy\_C2$: prisoner 2 can switch his decision to confessing, from the current state
+\item $alternative\_strategy\_not\_C2$: prisoner 2 can switch his decision to not confessing, from the current state
+\item $LAS1$: prisoner 1 gets a large sentence if he switches to an alternative strategy
+\item $MAS1$: prisoner 1 gets a medium sentence if he switches to an alternative strategy
+\item $SAS1$: prisoner 1 gets a small sentence if he switches to an alternative strategy
+\item $NAS1$: prisoner 1 gets no sentence if he switches to an alternative strategy
+\item $LAS2$: prisoner 2 gets a large sentence if he switches to an alternative strategy
+\item $MAS2$: prisoner 2 gets a medium sentence if he switches to an alternative strategy
+\item $SAS2$: prisoner 2 gets a small sentence if he switches to an alternative strategy
+\item $NAS2$: prisoner 2 gets no sentence if he switches to an alternative strategy
+\end{itemize}
+
+
+
+The input file includes the following logical formulas, starting from the line "% each pair of desicions...":
+
+\begin{itemize}
+\item Each strategy has an alternative:
+\begin{itemize}
+\item $C1 \leftrightarrow alternative\_strategy\_not\_C1$
+\item $C1 \leftrightarrow -alternative\_strategy\_C1$
+\item $-C1 \leftrightarrow alternative\_strategy\_C1$
+\item $-C1 \leftrightarrow -alternative\_strategy\_not\_C1$
+\item $C2 \leftrightarrow alternative\_strategy\_not\_C2$
+\item $C2 \leftrightarrow -alternative\_strategy\_C2$
+\item $-C2 \leftrightarrow alternative\_strategy\_C2$
+\item $-C2 \leftrightarrow -alternative\_strategy\_not\_C2$
+\end{itemize}
+\item Each alternative strategy, if applied, for each prisoner, has an alternative sentence associated with it (considering that the other prisoner has the same strategy):
+\begin{itemize}
+\item $alternative\_strategy\_C1 \land C2 \leftrightarrow -LAS1 \land MAS1 \land -SAS1 \land -NAS1$
+\item $alternative\_strategy\_not$
+\item $alternative\_strategy\_not\_C1 \land C2 \leftrightarrow LAS1 \land -MAS1 \land -SAS1 \land -NAS1$
+\item $alternative\_strategy\_C1 \land -C2 \leftrightarrow -LAS1 \land -MAS1 \land -SAS1 \land NAS1$
+\item $alternative\_strategy\_not\_C1 \land -C2 \leftrightarrow -LAS1 \land -MAS1 \land SAS1 \land -NAS1$
+\item $C1 \land alternative\_strategy\_C2 \leftrightarrow -LAS2 \land MAS2 \land -SAS2 \land -NAS2$
+\item $C1 \land alternative\_strategy\_not\_C2 \leftrightarrow LAS2 \land -MAS2 \land -SAS2 \land -NAS2$
+\item $-C1 \land alternative\_strategy\_C2 \leftrightarrow -LAS2 \land -MAS2 \land -SAS2 \land NAS2$
+\item $-C1 \land alternative\_strategy\_not\_C2 \leftrightarrow -LAS2 \land -MAS2 \land SAS2 \land -NAS2$
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item $P1\_change\_benefit$: prisoner 1 benefits if he switches strategies from current state and the other prisoner keeps the same strategy (prisoner 1 gets a smaller sentence if he switches)
+\item $P2\_change\_benefit$: prisoner 2 benefits if he switches strategies from current state and the other prisoner keeps the same strategy (prisoner 2 gets a smaller sentence if he switches)
+\end{itemize}
+
+\begin{itemize}
+\item For each alternative strategy, there is a condition for which it is advantageous for the prisoner to change strategies:
+\begin{itemize}
+\item $alternative\_strategy\_C1 \land C2 \land -P1\_change\_benefit$
+\item $alternative\_strategy\_not\_C1 \land C2 \land P1\_change\_benefit$
+\item $alternative\_strategy\_C1 \land -C2 \land -P1\_change\_benefit$
+\item $alternative\_strategy\_not_C1 \land -C2 \land P1\_change\_benefit$
+\item $C1 \land alternative\_strategy\_C2 \land -P2\_change\_benefit$
+\item $C1 \land alternative\_strategy\_not\_C2 \land P2\_change\_benefit$
+\item $-C1 \land alternative\_strategy\_C2 \land -P2\_change\_benefit$
+\item $-C1 \land alternative\_strategy\_not_C2 \land P2\_change\_benefit$
+\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+\item For prisoner 1, it is advantageous to change strategies if the alternative sentence is no sentence or a small sentence:
+\begin{align*}
+& (NAS1 \land LS1) \lor (NAS1 \land MS1) \lor (NAS1 \land SS1) \lor (SAS1 \land LS1) \
+& \quad \lor (SAS1 \land MS1) \lor (MAS1 \land LS1) \
+& \leftrightarrow P1\_change\_benefit
+\end{align*}
+\item For prisoner 1, it is not advantageous to change strategies if the alternative sentence is a large sentence or a medium sentence:
+\begin{align*}
+& (LAS1 \land NS1) \lor (MAS1 \land NS1) \lor (SAS1 \land NS1) \lor (LAS1 \land SS1) \
+& \quad \lor (MAS1 \land SS1) \lor (LAS1 \land MS1) \
+& \leftrightarrow -P1\_change\_benefit
+\end{align*}
+\item For prisoner 2, it is advantageous to change strategies if the alternative sentence is no sentence or a small sentence:
+\begin{align*}
+& (NAS2 \land LS2) \lor (NAS2 \land MS2) \lor (NAS2 \land SS2) \lor (SAS2 \land LS2) \
+& \quad \lor (SAS2 \land MS2) \lor (MAS2 \land LS2) \
+& \leftrightarrow P2\_change\_benefit
+\end{align*}
+\item For prisoner 2, it is not advantageous to change strategies if the alternative sentence is a large sentence or a medium sentence:
+
+\begin{align*}
+& (LAS2 \land NS2) \lor (MAS2 \land NS2) \lor (SAS2 \land NS2) \lor (LAS2 \land SS2) \
+& \quad
+\end{align*}
+\item For prisoner 2, it is not advantageous to change strategies if the alternative sentence is a large sentence or a medium sentence:
+\begin{align*}
+& (LAS2 \land NS2) \lor (MAS2 \land NS2) \lor (SAS2 \land NS2) \lor (LAS2 \land SS2) \
+& \quad \lor (MAS2 \land SS2) \lor (LAS2 \land MS2) \
+& \leftrightarrow -P2\_change\_benefit
+\end{align*}
+
+\item A Nash equilibrium has been reached if both prisoners do not benefit from changing strategies: \
+$nash\_equilibrium \leftrightarrow (-P1\_change\_benefit \land -P2\_change\_benefit)$
+\end{itemize}
+
+\subsection{Goals}
+
+The input file includes the following goal:
+
+\begin{itemize}
+\item Find all states that represent a Nash equilibrium: \
+$-nash\_equilibrium$
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{is}
+
+\appendix
+
+\chapter{Your original code}
+Don't be a cheater! Cheating affects your colleagues, scholarships and a lot more.
+This section should contain only code developed by you, without any line re-used from other sources. 
+This section helps me to correctly evaluate your amount of work and results obtained. 
+
+
+\vspace{2cm}
+\begin{center}
+Intelligent Systems Group\\
+\includegraphics[width=10cm]{fig/footer}
+\end{center}
+
+
+
+\end{document}
